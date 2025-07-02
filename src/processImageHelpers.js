@@ -1,6 +1,5 @@
 import * as path from "path";
 
-
 export function extractFileName(response) {
     const imageUrl = response.url;
     const regex = /([\w\d\-\_]+)\.(jpe?g|gif|png|avif|tiff|svg|webp)$/i;
