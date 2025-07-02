@@ -2,9 +2,9 @@ import readline from 'readline';
 import sharp from 'sharp';
 import dotenv from 'dotenv';
 import * as path from 'path';
+import fsPromises from 'fs/promises';
 import fs from 'fs';
 import { fileTypeFromBuffer } from 'file-type';
-import { once } from 'events';
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -64,10 +64,7 @@ async function saveImage(fetchResponse) {
       const destinationFilePath = path.join(process.env.IMAGE_INPUT_PATH, outputFileName);
 
       // fs.createWriteStream(destinationFilePath).write(buffer); <-- this didn't work!
-      const writeStream = fs.createWriteStream(destinationFilePath);
-      writeStream.write(buffer);
-      writeStream.end(); // signal that writing is done
-      await once(writeStream, 'finish'); // wait for stream to finish
+      await fsPromises.writeFile(destinationFilePath, buffer); //wait for img to write to file
 
       console.log(`Success! Your ${fileType.ext} image is now copied to ${destinationFilePath}`);
       return destinationFilePath;
@@ -77,7 +74,6 @@ async function saveImage(fetchResponse) {
   }
 }
 async function processImage(inputPath) {
-  console.log(`Input Path = ${inputPath}`);
   if (!fs.existsSync(inputPath)) {
     console.error(`Error: no input file at ${inputPath}`);
     return;
@@ -103,11 +99,6 @@ async function processImage(inputPath) {
 }
 
 console.log("Hello world");
-//Get user specified image-url
-//store
-//manipulate
-//store a new copy
-
 const imageUrl = await validateInput();
 const fetchedImage = await fetchImage(imageUrl);
 const inputImagePath = await saveImage(fetchedImage);
