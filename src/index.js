@@ -12,9 +12,14 @@ const imageUrl = await validateInput();
 
 const fetchedImage = await fetchImage(imageUrl);
 
-const savedImageInfo = await saveImage(fetchedImage);
+const inputImagePath = await saveImage(fetchedImage);
 
-processImage(savedImageInfo);
+if (inputImagePath) {
+    await processImage(inputImagePath);
+}
+else {
+    console.log("No image data saved.");
+}
 
 
 

@@ -1,26 +1,16 @@
 import * as path from "path";
-import dotenv from "dotenv";
 
-dotenv.config();
 
 export function extractFileName(response) {
     const imageUrl = response.url;
-    const regex = /\/([\w\d]+)\.(jpe?g|gif|png|avif|tiff|svg|webp)$/i;
+    const regex = /([\w\d\-\_]+)\.(jpe?g|gif|png|avif|tiff|svg|webp)$/i;
     const matches = imageUrl.match(regex)
+    console.log(`Matches = ${matches[0]}`);
     return matches && matches[1] ? matches[1] : console.error("No matches found", matches);
 }
 
-// export function buildImageFileNameAndPath(imageName, fileType) {
-//     return path.join(process.env.IMAGE_INPUT_PATH, `${imageName}.${fileType.ext}`);
-// }
-
-
-export function buildImageFileName(imageName, fileType) {
-    const outputFileName = `${imageName}.${fileType.ext}`;
-    const destinationFilePath = path.join(process.env.IMAGE_INPUT_PATH, outputFileName);
-    return destinationFilePath;
-}
-
-async function getFileType(response) {
-    const fileType = await fileTypeFromFile(response)
+export function buildOutputPath(inputPath, outputDirectoryPath) {
+    const {name, ext} = path.parse(inputPath);
+    console.log(path.parse(inputPath));
+    return path.join(outputDirectoryPath, `${name}_resized${ext}`);
 }
